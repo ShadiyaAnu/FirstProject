@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% load static %}
+<section class="section-content padding-y bg">
+  <div class="container">
+      <!-- ============================ COMPONENT 1 ================================= -->
+      <div class="card">
+          <div class="row no-gutters justify-content-center">
+              <div class="col-md-6 text-center" >
+                  <!-- Main image -->
+                  <img id="main-image" src="{{ single_product.product_images.url }}" alt="{{ single_product.product_name }}" style="height:380px; width:380px;" onclick="toggleZoom(this)">
+              
+
+                <!-- Sub-images -->
+      
+        <div class="col-md-12">
+            <article class="gallery-wrap">
+                <div class="img-big-wrap d-flex justify-content-center">
+                    {% for image in product_images %}
+                    <button type="button" class="mb-1" onclick="swapImages(this);toggleEnlargeImage('/media/{{image.image.url}}',bbb)">
+                        <img src="{{ image.image.url }}" class="img-thumbnail mx-2" style="width: 100px; height: auto;" alt="{{ product.product_name }}">
+                    </button>
+                    {% endfor %}
+                </div>
+            </article> <!-- gallery-wrap .end// -->
+        </div>
+    </div>
+      
+  
+          
+          <main class="col-md-6 border-left">
+              <article class="content-body">
+                  <h2 class="title">{{ single_product.product_name }}</h2>
+                  <div class="mb-3"> 
+                      <var class="price h4">Rs-{{ single_product.original_price }}</var> 
+                  </div> 
+                  <p>{{ single_product.description }}</p>
+                  <hr>
+                  <div class="row">
+                      <div class="item-option-select">
+                          <h6>Select Size</h6>
+                          <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                              <label class="btn btn-light">
+                                  <input type="radio" name="radio_color"> 6UK
+                              </label>
+                              <label class="btn btn-light active">
+                                  <input type="radio" name="radio_color" checked> 7UK
+                              </label>
+                              <label class="btn btn-light">
+                                  <input type="radio" name="radio_color"> 8UK
+                              </label>
+                              <label class="btn btn-light">
+                                  <input type="radio" name="radio_color"> 9UK
+                              </label>
+                          </div> 
+                      </div>
+                  </div> <!-- row.// -->
+                  <hr>
+
+                  {% if single_product.quantity > 0 %}
+                    <a href="{% url 'add_cart' product_id=single_product.id %}" class="btn btn-block btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
+                {% else %}
+                    <p class="text-danger">Out of stock</p>
+                {% endif %}
+
+                  <!--<a href="{% url 'add_cart' product_id=single_product.id%}" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>-->
+              </article> <!-- product-info-aside .// -->
+          </main> <!-- col.// -->
+      <!-- card.// -->
+    
+      <!-- ============================ COMPONENT 1 END .// ================================= -->
+   <!-- container .//  -->
+</section>
+
+<!-- JavaScript for image swapping -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Function to swap images
+  function swapImages(clickedImage) {
+      var clickedImageUrl = clickedImage.querySelector('img').getAttribute('src');
+      var mainImage = document.getElementById('main-image');
+      mainImage.setAttribute('src', clickedImageUrl);
+  }
+  // Function to toggle enlarge image
+  function toggleEnlargeImage(imageElement) {
+      var enlargedImage = document.getElementById('enlarged-image');
+
+      if (enlargedImage) {
+          // If the enlarged image already exists, remove it
+          document.body.removeChild(enlargedImage);
+      } else {
+          // If the enlarged image doesn't exist, create and display it
+          enlargedImage = document.createElement('div');
+          enlargedImage.innerHTML = '<img src="' + imageElement.src + '" class="img-fluid rounded" alt="Enlarged Image" style="padding: 10px; background:white; max-width: 100%; max-height: 100%;">';
+          enlargedImage.id = 'enlarged-image';
+          enlargedImage.style.position = 'fixed';
+          enlargedImage.style.top = '0';
+          enlargedImage.style.left = '0';
+          enlargedImage.style.width = '100%';
+          enlargedImage.style.height = '100%';
+          enlargedImage.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+          enlargedImage.style.display = 'flex';
+          enlargedImage.style.alignItems = 'center';
+          enlargedImage.style.justifyContent = 'center';
+          enlargedImage.style.zIndex = '1000';
+          enlargedImage.onclick = function () {
+              // Clicking anywhere on the overlay will close it
+              document.body.removeChild(enlargedImage);
+          };
+          document.body.appendChild(enlargedImage);
+      }
+  }
+  function toggleZoom(imageElement) {
+      if (imageElement.classList.contains('zoomed')) {
+          imageElement.style.transform = 'scale(1)';
+          imageElement.classList.remove('zoomed');
+      } else {
+          imageElement.style.transform = 'scale(1.5)';
+          imageElement.classList.add('zoomed');
+      }
+  }
+
+</script>
+
+
+
+{% endblock %}

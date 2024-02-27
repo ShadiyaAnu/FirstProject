@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+{% block content %}
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row">
+            {% include 'includes/sidebar.html' %}
+        <main class="col-md-9">
+            
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Logged In as {{ user.first_name }}</strong>
+                
+            </header>

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Order Details - Order ID: {{ order.id }}</h2>
+                        <p class="card-text">Order Date: {{ order.created_at }}</p>
+                        <p class="card-text">Total Amount: {{ order.order_total }}</p>
+                        <p class="card-text">Status: {{ order.status }}</p>
+
+                        <div class="col-xs-6">
+                            <address>
+                              
+                                <strong>Payment Method:</strong>
+                                {% if order.payment %}
+
+                                <br>
+                                {{ order.payment.payment_method }}
+                                <br>
+                                {% else %}
+                            
+                                 None
+                                
+                                {% endif %}
+                                <br>
+                                Status:{{ order.payment.status }}
+                                {% if order.status != 'Cancelled' and not order.payment %}
+                                    Payment Pending<br>
+                                    <a href="{% url 'payments' order.id %}">Complete Payment</a>
+                                {% endif %}
+                                <br><br>
+                            </address>
+                        </div>
+                        
+                        <div class="col-xs-6 text-left">
+                            <address>
+                                <strong>Shipped To:</strong>
+                                <br>
+                                {{ order.user.first_name }}<br>
+                                {{ order.address_line_1 }}<br>
+                                {% if order.address_line_2 %}
+                                    {{ order.address_line_2 }},
+                                {% endif %}
+                                City : {{ order.city }}<br>
+                                Pincode : {{ order.zipcode }}<br>
+                            </address>
+                        </div>
+                        {% if order.payment %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>ORDER SUMMARY</h3>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="line">
+                                            <th class="text-left"><strong>Image</strong></th>
+                                            <th class="text-left"><strong>Products</strong></th> 
+                                            <th class="text-left"><strong>Category</strong></th>
+                                            <th class="text-right"><strong>Quantity</strong></th>
+                                            <th class="text-right"><strong>Price</strong></th>
+                                            <th class="text-right"><strong>Total</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order_item in order_products %}
+                                        <tr>
+                                            <td><img src="{{ order_item.product.product_images.url }}" alt="{{ order_item.product.product_name }}" style="max-width: 50px;"></td>
+                                            <td><strong>{{ order_item.product.product_name }}</strong></td>
+                                            <td class="text-left">{{ order_item.product.category.category_name }}</td>
+                                            <td class="text-right">{{ order_item.quantity }}</td>
+                                            <td class="text-right">₹{{ order_item.product.original_price }}</td>
+                                            <td class="text-right">₹{{ order_item.total }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td class="text-right"><strong>Sub Total</strong></td>
+                                            <td class="text-right"><strong>₹{{ subtotal }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td class="text-right"><strong>GST</strong></td>
+                                            <td class="text-right"><strong>₹{{ order.tax }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td class="text-right"><strong>Shipping</strong></td>
+                                            <td class="text-right"><strong>₹{{ shipping }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td class="text-right"><strong>Discount</strong></td>
+                                            <td class="text-right"><strong>₹{{ discount }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td class="text-right"><strong>Coupon Code</strong></td>
+                                            <td class="text-right"><strong>{{ coupon_code }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td class="text-right"><strong>Grand Total</strong></td>
+                                            <td class="text-right"><strong>₹{{ order.order_total }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                {% if order.status != 'Cancelled' %}
+                                <form action="{% url 'cancel_order_product' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Cancel Order</button>
+                                </form>
+                                {% else %}
+                                <p class="text-danger">Order is Cancelled.</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 text-center">
+                                {% if order.status != 'Cancelled' and order.payment %}
+                                <a href="{% url 'invoice' order.id %}" class="btn btn-primary">Download Invoice</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

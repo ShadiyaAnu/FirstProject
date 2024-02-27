@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row">
+            {% include 'includes/sidebar.html' %}
+
+<main class="col-md-9">
+            
+    <header class="card-header">
+        <strong class="d-inline-block mr-3">Logged In as {{ user.first_name }}</strong>
+        
+    </header>
+    <form action="{% url 'edit_address' address.id %}" method="POST">
+        {% csrf_token %}
+        <div class="container py-4">
+            {% if messages %}
+            <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+              <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                {% endfor %}
+              </div>
+              </div>
+            </div>
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="name" class="form-label fs-5">Full Name</label>
+              <input type="text" class="form-control form-control-lg" id="name" name="name" value="{{ address.first_name }}"required>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="mobile" class="form-label fs-5">Mobile Number</label>
+              <input type="text" class="form-control form-control-lg" id="phone" name="phone" value="{{ address.phone }}" >
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="email" class="form-label fs-5">Email Address</label>
+              <input type="email" class="form-control form-control-lg" id="email" name="email" value='{{ address.email }}' >
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="address_line_1" class="form-label fs-5">Address Line 1</label>
+                <textarea   type="text" cols="80" class="form-control form-control-lg"  name="address_line_1"  value='{{ address.address_line_1 }}' required></textarea>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="address_line_2" class="form-label fs-5">Address Line 2</label>
+                <input type="text" class="form-control form-control-lg" id="" name="address_line_2" value='{{ address.address_line_2 }}'>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="name" class="form-label fs-5">City</label>
+                <input type="text" class="form-control form-control-lg" id="" name="city" value='{{ address.city }}' required>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="name" class="form-label fs-5">Zip code</label>
+                <input type="text" class="form-control form-control-lg" id="" name="zipcode" value='{{ address.zipcode }}'required>
+              </div>
+          </div>
+           
+          <button type="submit" class="btn btn-warning btn-lg" style="background-color: #F28123; color: white; border-radius: 35px;">Add Address</button>
+        </div>
+    </form>	
+
+
+    
+            
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    
+    </section>
+
+{% endblock %}

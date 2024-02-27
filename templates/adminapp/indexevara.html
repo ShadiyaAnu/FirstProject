@@ -1,0 +1,192 @@
+
+{% load static %}
+
+
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="{% static 'adminapp/image/x-icon' %}" href="{% static 'adminapp/imgs/theme/favicon.svg' %}">
+    <!-- Template CSS -->
+    <link href="{% static 'adminapp/css/main.css'%}" rel="stylesheet" type="text/css" />
+    
+
+    <!-- Bootstrap JS and Popper.js (Order matters) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% block styles%}  
+
+{%endblock%}  
+
+</head>
+
+<body>
+
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                
+                <h2  style="font-weight: 500; color: #333333; font-family: 'Arial', sans-serif;  text-transform: uppercase;">ShoeStore</h2>
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item active">
+                    <a class="menu-link" href="{% url 'dashboard_admin'%}"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="{% url 'admin_products' %}"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="{% url 'admin_category' %}"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Category</span>
+                    </a>
+                </li>
+               
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'admin_orders'%}"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-orders-1.html">Order list 1</a>
+                        <a href="page-orders-2.html">Order list 2</a>
+                        <a href="page-orders-detail.html">Order detail</a>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="{% url 'admin_users' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+                   
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="{% url 'admin_coupons' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Coupon</span>
+                    </a>
+                   
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="{% url 'sales_report'%}"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="{% url 'stock_report'%}"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Stock Report</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="{% url 'cancel_report'%}"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Canceled orders</span>
+                    </a>
+                </li>
+                <!--<li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-form-product-1.html">Add product 1</a>
+                        <a href="page-form-product-2.html">Add product 2</a>
+                        <a href="page-form-product-3.html">Add product 3</a>
+                        <a href="page-form-product-4.html">Add product 4</a>
+                    </div>
+                </li>-->
+               
+               
+               <!-- <li class="menu-item">
+                    <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
+                        <span class="text">Reviews</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Statistics</span>
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <ul class="menu-aside">
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-settings-1.html">Setting sample 1</a>
+                        <a href="page-settings-2.html">Setting sample 2</a>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>-->
+            </ul>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div>
+                <h3>Welcome admin</h3>
+            </div>
+            <div class="col-logout">
+               
+                    <a href="{% url 'admin_logout' %}" class="btn btn-light bg">Sign Out</a>
+               
+            </div>
+        </header>
+   
+      
+        {%block body%}
+        
+        {% endblock %}
+  
+       
+
+    </main>
+    </body>
+      
+    
+    
+</html>

@@ -1,0 +1,40 @@
+{% extends 'adminapp/indexevara.html' %}
+{% load static %}
+
+{% block body %}
+    <h1>Cancel Report</h1>
+    <div class="mb-3">
+        <form method="GET" action="{% url 'cancel_report' %}">
+            <input type="text" name="search" class="form-control" placeholder="Search...">
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>Username</th>
+                    <th>Product Details</th>
+                    <th>Order Status</th>
+                    <th>Order ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in cancelled_orders %}
+                    <tr>
+                        <td>{{ order.user.first_name }}</td>
+                        <td>
+                            {% for product in order.orderproduct_set.all %}
+                                {{ product.product.product_name }} - Quantity: {{ product.quantity }}
+                                <br>
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.id }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row">
+            {% include 'includes/sidebar.html' %}
+        <main class="col-md-9">
+            
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Logged In as {{ user.first_name }}</strong>
+                
+            </header> 
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Wallet Balance</h5>
+                        <p><strong>Your current wallet balance:</strong>₹{{ wallet_amount }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

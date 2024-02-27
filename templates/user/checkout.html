@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <!-- ============================ COMPONENT 1 ================================= -->
+        <div class="row">
+            <aside class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4 text-center">Billing Address</h4>
+                        <form action="{% url 'place_order' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <h5 class="text-center text-white bg-warning" style="border-radius: 8px; padding: 10px;">Choose Delivery address:</h5>
+                                <div class="custom-control custom-radio">
+                                    {% if address_list %}
+                                        {% for address in address_list %}
+                                            <input type="radio" id="address{{ address.id }}" name="selected_address" class="custom-control-input" value="{{ address.id }}" {% if address.is_default %}checked{% endif %} {% if address.is_default %}disabled{% endif %}>
+                                            <label class="custom-control-label" for="address{{ address.id }}">
+                                                {{ address.full_name }} - {{ address.address_line_1 }}, {{ address.city }} Phone: {{ address.phone }}
+                                                {% if address.is_default %}
+                                                    <span class="text-success">Selected</span>
+                                                {% endif %}
+                                            </label>
+                                            {% if not address.is_default %}
+                                                <a href="{% url 'set_default_address' address_id=address.id %}">Select</a>
+                                            {% endif %}
+                                            <br>
+                                        {% endfor %}
+                                    {% else %}
+                                        <h4>No Addresses Found</h4>
+                                    {% endif %}
+                                    <br>
+                                    <a href="{% url 'add_address' %}?source=checkout" class="btn btn-warning" style="background-color: #F28123; color: white; border-radius: 35px;">Add Address</a>
+                                </div>
+                            </div>
+                            
+
+
+
+
+
+                           <!-- <div class="form-group">
+                                <h5 class="text-center text-white bg-warning" style="border-radius: 8px; padding: 10px;">Choose Delivery address:</h5>
+                                <div class="custom-control custom-radio">
+                                    {% if address_list %}
+                                    
+                                    
+
+
+
+                                    {% for address in address_list %}
+                                    <input type="radio" id="address{{ address.id }}" name="selected_address" class="custom-control-input" value="{{ address.id }}" {% if address.is_default %}checked{% endif %}  {% if address %}disabled{% endif %} >
+                                        <label class="custom-control-label" for="address{{ address.id }}">
+                                            {{ address.full_name }} - {{ address.address_line_1 }}, {{ address.city }}
+                                           Phone: {{ address.phone}}
+                                           {% if address.is_default %}
+                                                <span class="text-success">Selected</span>
+                                             {% else %}
+                                                  <a href="{% url 'set_default_address' address_id=address.id %}">
+                                                  Select
+                                                 </a>
+                                             {% endif %}
+                                        </label>
+                                    {% endfor %}
+                                                                      
+                                    {% else %}
+                                    <h4>No Addresses Found</h4>
+                                {% endif %}
+                                <br>
+                                <a href="{% url 'add_address' %}?source=checkout" class="btn btn-warning" style="background-color: #F28123; color: white; border-radius: 35px;">Add Address</a>
+
+                                    
+                                </div>
+                                
+                            </div>-->
+
+                    </div>
+                </div> <!-- card.// -->
+            </aside> <!-- col.// -->
+
+            <aside class="col-lg-6">
+                 <!-- card.// -->
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-borderless table-shopping-cart">
+                            <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Quantity</th>
+                                <th scope="col" width="120">Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cart_item in cart_items %}
+                            <tr>
+                                <td>
+                                    <figure class="itemside align-items-center">
+                                       
+                                        <figcaption class="info">
+                                            <a href="{{ cart_item.product }}" class="title text-dark">
+                                                {{ cart_item.product.product_name }}</a>
+                                            <p class="text-muted small">
+                                                {% if cart_item.variant.all %}
+                                                    {% for item in cart_item.variant.all %}
+                                                        {{ item.variant_category | capfirst }}: {{ item.variant_value | capfirst }} <br>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </p>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <label>{{ cart_item.quantity }}</label>
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <var class="price">Rs. {{ cart_item.sub_total }}</var>
+                                        <small class="text-muted"> Rs. {{ cart_item.product.price }} each </small>
+                                    </div> <!-- price-wrap .// -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                       
+                        
+                    </div> <!-- card-body.// -->
+                </div> <!-- card.// -->
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                          <dt>Total price:</dt>
+                          <dd class="text-right">₹{{ total }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                          <dt>GST:</dt>
+                          <dd class="text-right"> ₹{{ tax }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Shipping:</dt>
+                            <dd class="text-right"> ₹{{ shipping }}</dd>
+                          </dl>
+                        <dl class="dlist-align">
+                          <dt>Grand Total:</dt>
+                          <dd class="text-right text-dark b"><strong>₹{{ grand_total }}</strong></dd>
+                        </dl>
+                        <hr>
+                        <p class="text-center mb-3">
+                           <!-- <img src="./images/misc/payments.png" height="26">-->
+                        </p>
+                        <input type="hidden" name="selected_address" value="{{ address.id }}">
+                        <button type="submit" name="submit" class="btn btn-primary btn-block">Proceed to Place Order</button>
+                        
+                <a href="{% url 'product_list' %}" class="btn btn-light btn-block">Continue Shopping</a>
+                    </div> <!-- card-body.// -->
+ 
+
+                </form>
+                </aside>
+             <!-- col.// -->
+        </div> <!-- row.// -->
+        <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+    </div> <!-- container .//  -->
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+    function submitForm() {
+        document.getElementById('placeOrderForm').submit();
+    }
+</script>
+{% endblock %}
+
+  

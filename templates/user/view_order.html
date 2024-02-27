@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block content %}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Order Details - Order ID: {{ order.id }}</h2>
+                        <p class="card-text">Order Date: {{ order.created_at }}</p>
+                        <p class="card-text">Total Amount: {{ order.order_total }}</p>
+                        <p class="card-text">Status: {{ order.status }}</p>
+                        <br>
+
+                        
+                        <div class="col-xs-6 text-left">
+                            <address>
+                                <strong>Shipped To:</strong>
+                                <br>
+                                {{ order.user.first_name }}<br>
+                                {{ order.address_line_1 }}<br>
+                                {% if order.address_line_2 %}
+                                {{ order.address_line_2 }},
+                                {% endif %}
+                                City : {{ order.city }}<br>
+                                Pincode : {{ order.zipcode }}<br>
+                            </address>
+                        </div>
+
+                      
+
+
+                        <h3 class="card-title">Ordered Products:</h3>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order_products %}
+                                    <tr>
+                                        <td><img src="{{ item.product.product_images.url }}" alt="{{ item.product.product_name }}" style="max-width: 50px;"></td>
+                                        <td>{{ item.product.product_name }}</td>
+                                        
+                                        <td>{{ item.product.category.category_name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.product.original_price }}</td>
+                                       
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!--<h3 class="card-title">Ordered Products:</h3>
+                        <ul class="list-unstyled">
+                            {% for item in order_products %}
+                            <li class="media mb-3">
+                                <img src="{{ item.product.product_images.url }}" alt="{{ item.product.product_name }}" class="mr-3" style="max-width: 50px;">
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1">{{ item.product.product_name }}</h5>
+                                    Category: {{ item.product.category.category_name }}
+                                    <br>
+                                    Quantity: {{ item.quantity }}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>-->
+                        {% if order.status != 'Cancelled' %}
+                        <form action="{% url 'cancel_order_product' order.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Cancel Order</button>
+                        </form>
+                        {% else %}
+                        <p class="text-danger">Order is Cancelled.</p>
+                        {% endif %}
+                    </div>
+                    <div class="text-center">
+                        {% if order.status != 'Cancelled' %}
+                        <a href="{% url 'invoice' order.id %}" class="btn btn-primary">Download Invoice</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div> <!-- row.// -->
+    </div>
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+{% endblock %}

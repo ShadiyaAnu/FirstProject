@@ -1,0 +1,49 @@
+{% extends 'adminapp/indexevara.html' %}
+
+{% load static %}
+
+{% block body %}
+
+
+{% for message in messages  %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+ <strong></strong> {{message}}
+ <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{% endfor %}
+<div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">User Details</h5>
+  </div>
+
+<table class="table  table-hover table-borderless" style="border: 2px solid gray;">
+    <thead>
+      <tr>
+          <th scope="col " class="fw-bolder">Name </th>
+          <th scope="col " class="fw-bolder">Email ID</th>
+          <th scope="col " class="fw-bolder">Activation</th>
+      </tr>
+    </thead>
+    <hr>
+
+    <tbody>
+        {% for value in users %}
+        
+        
+      <tr>
+        
+        <td>{{value.first_name }}</td>
+        <td>{{value.email}}</td>
+        <td>
+            {% if value.is_active %}
+                <a href="{% url 'block_user' value.id %}" class="btn btn-danger">Block</a>
+            {% else %}
+                <a href="{% url 'unblock_user' value.id %}" class="btn btn-success">Unblock</a>
+            {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+

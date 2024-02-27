@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if not cart_items %}
+    <div class="empty-cart-message text-center" style="padding: 200px 0;">
+        <h2>Your Shopping Cart is Empty</h2>
+        <div class="cart-buttons">
+            <a href="{% url 'product_list' %}" class="btn btn-light primary">Continue Shopping</a>
+        </div>
+    </div>
+{% else %}
+    <div class="cart-section mt-150 mb-150">
+        <div class="container">
+            <div class="row">
+                {% if messages %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="messages">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <section class="section-content padding-y bg">
+                    <div class="container">
+                        <!-- COMPONENT 1 -->
+                        <div class="row">
+                            <aside class="col-lg-9">
+                                <div class="card">
+                                    <table class="table table-borderless table-shopping-cart">
+                                        <thead class="text-muted">
+                                            <tr class="small text-uppercase">
+                                                <th scope="col">Product</th>
+                                                <th scope="col" width="120">Quantity</th>
+                                                <th scope="col" width="120">Price</th>
+                                                <th scope="col" class="text-right" width="200"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for cart_item in cart_items %}
+                                            <tr>
+                                                <td>
+                                                    <figure class="itemside align-items-center">
+                                                        <div class="aside"><img src="{{ cart_item.product.product_images.url }}" class="img-sm"></div>
+                                                        <figcaption class="info">
+                                                            <a href="{% url 'product_detail' cart_item.product.category.id cart_item.product.id %}" class="title text-dark">{{ cart_item.product.product_name }}</a>
+                                                        </figcaption>
+                                                    </figure>
+                                                </td>
+                                                <td>
+                                                    <div class="col">
+                                                        <div class="input-group input-spinner">
+                                                            <div class="input-group-prepend">
+                                                                {% if cart_item.product.quantity > 0 %}
+                                                                <a href="{% url 'remove_cart' cart_item.product.id %}">
+                                                                    <button class="btn btn-light remove-from-cart" type="button" id="button-plus">
+                                                                        <i class="fa fa-minus"></i>
+                                                                    </button>
+                                                                </a>
+                                                                {% endif %}
+                                                            </div>
+                                                            <input type="text" class="form-control" value="{{ cart_item.quantity }}">
+                                                            <div class="input-group-append">
+                                                                {% if cart_item.product.quantity > 0 %}
+                                                                
+																
+																<a href="{% url 'add_cart' cart_item.product.id%}">
+                                                                    <button class="btn btn-light add-to-cart" type="button" id="button-minus"><i class="fa fa-plus"></i></button>
+                                                                </a>
+                                                                {% elif cart_item.product.quantity <= 0 %}
+                                                                <!-- If product quantity is zero, show Out of Stock message -->
+                                                                <span class="btn btn-light" style="cursor: not-allowed;">Out of Stock</span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="price-wrap">
+                                                        <var class="price">₹{{ cart_item.sub_total }}</var>
+                                                        <small class="text-muted"> ₹{{ cart_item.product.original_price }} each </small>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right">
+                                                    <a href="{% url 'remove_cart_item' cart_item.product.id %}" class="btn btn-danger remove-from-cart"> Remove</a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </aside>
+                            <aside class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <dl class="dlist-align">
+                                            <dt>Total price:</dt>
+                                            <dd class="text-right">₹{{ total }}</dd>
+                                        </dl>
+                                        <dl class="dlist-align">
+                                            <dt>GST:</dt>
+                                            <dd class="text-right"> ₹{{ tax }}</dd>
+                                        </dl>
+                                        <dl class="dlist-align">
+                                            <dt>Shipping:</dt>
+                                            <dd class="text-right"> ₹{{ shipping }}</dd>
+                                        </dl>
+                                        <dl class="dlist-align">
+                                            <dt>Grand Total:</dt>
+                                            <dd class="text-right text-dark b"><strong>₹{{ grand_total }}</strong></dd>
+                                        </dl>
+                                        <hr>
+                                        <p class="text-center mb-3"></p>
+                                        <a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
+                                        <a href="{% url 'product_list' %}" class="btn btn-light btn-block">Continue Shopping</a>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+<!-- Your script section -->
+<script>
+    $(document).ready(function() {
+        // Function to handle adding items to the cart via AJAX
+        $('.add-to-cart').click(function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(response) {
+                    // Update the cart section with the updated content returned from the server
+					console.log('AJAX request successful:', response);
+                    $('.cart-section').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error adding item to cart:', error);
+                }
+            });
+        });
+
+        // Function to handle removing items from the cart via AJAX
+        $('.remove-from-cart').click(function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(response) {
+					console.log('AJAX request successful:', response);
+                    // Update the cart section with the updated content returned from the server
+                    $('.cart-section').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error removing item from cart:', error);
+                }
+            });
+        });
+    });
+</script>

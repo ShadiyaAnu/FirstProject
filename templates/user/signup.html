@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+
+    <!-- ============================ COMPONENT REGISTER   ================================= -->
+        <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+          <article class="card-body">
+            <header class="mb-4"><h4 class="card-title">Sign up</h4></header>
+            {% if messages %}
+            <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    {% endfor %}
+                </div>
+                </div>
+            </div>
+            </div>
+            {% endif %}
+
+            <form action="{% url 'signup'%}" method="post" onsubmit="return validateForm()">{% csrf_token %}
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>Name</label>
+                              <input type="text" class="form-control" placeholder="" name="name" id='id_name' required>
+                        </div> <!-- form-group end.// -->
+                        <!-- form-group end.// -->
+                    </div> <!-- form-row end.// -->
+                    <div class="form-group">
+                        <label>PhoneNumber</label>
+                        <input type="text" class="form-control" placeholder="" name="mobile" id="id_mobile" required>
+                        
+                    </div> <!-- form-group end.// -->
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" placeholder="" name="email" id="id_email" required>
+                        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div> <!-- form-group end.// -->
+                  
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Create password</label>
+                            <input class="form-control" type="password" name="new_password" id="id_new_password" required>
+                        </div> <!-- form-group end.// --> 
+                        <div class="form-group col-md-6">
+                            <label>Confirm password</label>
+                            <input class="form-control" type="password" name="confirm_password" id="id_confirm_password" required>
+                        </div> <!-- form-group end.// -->  
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block" > Register  </button>
+                    </div> <!-- form-group// -->      
+                        
+                </form>
+            </article><!-- card-body.// -->
+        </div> <!-- card .// -->
+        <p class="text-center mt-4">Have an account? <a href="/login/">Log In</a></p>
+        <br><br>
+    <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
+    
+    
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    <script>
+    
+    function validateForm() {
+        // Access form elements
+        var name = document.getElementById('id_name').value;
+        var mobile = document.getElementById('id_mobile').value;
+        var email = document.getElementById('id_email').value;
+        var password = document.getElementById('id_new_password').value;
+        var confirm_password = document.getElementById('id_confirm_password').value;
+
+        // Validate email format
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert("Invalid email address");
+            return false;
+        }
+
+        // Validate password match
+        if (password !== confirm_password) {
+            alert("Passwords do not match");
+            return false;
+        }
+
+        // Validate phone number format
+        if (!/^\d{10}$/.test(mobile)) {
+            alert("Invalid phone number format. Please enter a 10-digit number.");
+            return false;
+        }
+
+        // Validate password strength
+        if (!/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(password)) {
+            alert("Password should be a minimum of 8 characters and include both letters and numbers.");
+            return false;
+        }
+
+        // Additional client-side validations can be added here
+
+        // If all validations pass, the form will be submitted
+        return true;
+    }
+</script>
+  
+   
+{% endblock %}

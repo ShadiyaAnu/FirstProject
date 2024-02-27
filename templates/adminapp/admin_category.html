@@ -1,0 +1,62 @@
+
+
+{% extends 'adminapp/indexevara.html' %}
+
+{% load static %}
+
+{% block body %}
+
+    <br>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card py-1 mb-1">
+            <div class="table-head">
+                <h5 class="card-header" style="display: inline-block; margin-right: 900px;">Category</h5>
+                <a href="/adminapp/add_category" class="btn btn-primary">Add Category</a>
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                           
+                            <th>Category</th>
+                            <th>Category Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for category in categories %}
+                        <tr>
+                            
+                            <td>{{ category.category_name }}</td>
+                            <td>
+                                <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                    <li class="avatar avatar-xs pull-up">
+                                        <img src="{{ category.category_images.url }}" alt="Category Image" class="rounded-circle" class="img-thumbnail" alt="Item" style="max-width: 100px;">
+                                        
+                                    </li>
+                                </ul>
+                            </td>
+
+                            <td class="text-end">
+                                <div class="dropdown">
+                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'edit_category' category.id %}">Edit</a>
+                                        {% if not category.soft_deleted %}
+                                            <a class="dropdown-item" href="{% url 'soft_delete_category' category.id %}">Soft Delete</a>
+                                        {% endif %}
+                                        {% if category.soft_deleted %}
+                                            <a class="dropdown-item text-danger" href="{% url 'undo_soft_delete_category' category.id %}">Undo Soft delete</a>
+                                        {% endif %}
+                                    </div>
+                                </div> <!-- dropdown //end -->
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
