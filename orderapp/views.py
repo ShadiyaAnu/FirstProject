@@ -202,7 +202,6 @@ def place_order(request, total=0, quantity=0):
 
     tax = (2 * total) / 100
     shipping = (100 * quantity)
-    
     grand_total = total + tax + shipping - discount
     
     if request.method == 'POST':
@@ -469,7 +468,7 @@ def wallet_pay(request, order_id):
     try:
         wallet = Wallet.objects.get(user=user)
     except Wallet.DoesNotExist:
-        wallet = Wallet.objects.create(user=user, balance=0)
+        wallet = Wallet.objects.create(user=user, amount=0)
 
     if wallet.balance >= order.order_total:
         payment = Payment.objects.create(user=user, payment_method='Wallet', amount_paid=order.order_total, status='Paid')
