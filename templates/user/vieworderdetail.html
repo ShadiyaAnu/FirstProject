@@ -97,11 +97,18 @@
                                             <td class="text-right"><strong>Discount</strong></td>
                                             <td class="text-right"><strong>₹{{ discount }}</strong></td>
                                         </tr>
-                                        <tr>
+                                        <!--<tr>
                                             <td colspan="4"></td>
                                             <td class="text-right"><strong>Coupon Code</strong></td>
                                             <td class="text-right"><strong>{{ coupon_code }}</strong></td>
-                                        </tr>
+                                        </tr>-->
+                                        {% if coupon_code %}
+                                  <tr>
+                                <td colspan="4"></td>
+                                <td class="text-right"><strong>Coupon Code</strong></td>
+                                <td class="text-right"><strong>{{ coupon_code }}</strong></td>
+                                                </tr>
+                                        {% endif %}
                                         <tr>
                                             <td colspan="4"></td>
                                             <td class="text-right"><strong>Grand Total</strong></td>

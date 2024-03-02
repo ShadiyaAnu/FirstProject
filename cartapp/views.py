@@ -132,7 +132,7 @@ def add_cart(request, product_id):
             
         messages.success(request, 'Product Added to Cart')
             
-        return redirect('product_list')
+        return redirect('cart')
     
     else:
         try:
@@ -222,6 +222,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
             quantity += cart_item.quantity
         tax = (2 * total) / 100
         shipping = (100 * quantity)
+        
         grand_total = total + tax + shipping
         grand_total = round(grand_total, 2)
     except Cart.DoesNotExist:
@@ -265,6 +266,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         tax = (2 * total) / 100
         
         shipping = (100 * quantity)
+       
         grand_total = total + tax + shipping
         grand_total = round(grand_total, 2)
 

@@ -548,6 +548,8 @@ def view_order(request,order_id):
             'subtotal': subtotal,
             'coupon_code':coupon_code,
         }
+        if coupon_code:  # Only include coupon code in context if it's applied
+            context['coupon_code'] = coupon_code
     except Order.DoesNotExist:
         messages.error(request, 'Order does not exist.')  
         return redirect('product_list')      
