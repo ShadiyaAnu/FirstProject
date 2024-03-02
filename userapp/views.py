@@ -731,7 +731,7 @@ def wallet_pay(request, order_number):
         wallet = Wallet.objects.get(user = user)
         
     except:
-        wallet = Wallet.objects.create(user = user, amount=0)
+        wallet = Wallet.objects.create(user = user, balance=0)
         wallet.save()
         
     if wallet.balance>order.order_total:
